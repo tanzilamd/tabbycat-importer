@@ -1,0 +1,2 @@
+import { execute } from '@/lib/importer';
+export async function POST(req:Request){if(!req.headers.get('oai-authenticated-user-id'))return Response.json({error:'Sign in with ChatGPT to use the importer.'},{status:401});try{const body=await req.text();if(body.length>2500000)throw Error('Request exceeds 2.5 MB.');const {action,args}=JSON.parse(body);return Response.json(await execute(action,args),{headers:{'Cache-Control':'no-store'}});}catch(e){return Response.json({error:(e as Error).message},{status:400});}}
